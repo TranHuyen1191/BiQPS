@@ -1,0 +1,100 @@
+import argparse
+import csv
+import logging
+import math
+from .preProcessing import preProcessing
+from .localComputation import calLocalComp
+import numpy as np
+from statistics import median as med
+
+def main():
+    parser              = argparse.ArgumentParser()
+    parser.add_argument('--K', type=int, default='20',help="interval length (default: 20); only valid for gcMode=1 and gcMode=2")
+    parser.add_argument('--lcMode', type=str,choices=['SQM'], default='SQM',help="local computation mode (default:'SQM')")
+    parser.add_argument('--gcMode', type=int, choices=[1, 2,3], default=3,help="global computation mode (default:3)")
+    parser.add_argument('file', type=str,help="input .csv file")
+    args       	= parser.parse_args()
+    prePC = preProcessing()
+    noSegment = prePC._loadData(file=args.file)
+
+    ## Computation
+    Qo = 0
+    if args.lcMode == 'SQM':
+        localComp = calLocalComp()
+        localComp._loadModel(1500,181)
+        if args.gcMode == 3:
+            K1 = 60
+            K2 = 50
+            miQsi = 100
+            maQsi = 0
+            laQsi = 0
+            avQsi = 0
+            Kmin = min(K1,K2)
+            if noSegment<=Kmin: # Not enough a interval
+                sI=(prePC._divideInterval(0,noSegment))
+                Qo = localComp._predict(sI,np.array([0]).reshape(-1,1))
+            else:
+                for cntSeg in range(Kmin-1,noSegment):
+                    cntSI_K1=cntSeg-K1+1  #from 0 to  noSegment-K+1
+                    cntSI_K2=cntSeg-K2+1
+                    
+                    ## Dividing into intervals
+                    sI_K1=(prePC._divideInterval(cntSI_K1,K1))
+                    sI_K2=(prePC._divideInterval(cntSI_K2,K2))
+                    
+                    ## Local computation
+                    try:
+                        Qsi_K1 = localComp._predict(sI_K1,np.array([0]).reshape(-1,1))
+                        Qsi_K2 = localComp._predict(sI_K2,np.array([0]).reshape(-1,1))
+                    except Exception as e:
+                        logging.exception("Error in calculating local localComputation!")
+                    
+                    ## Global computation
+                    if cntSI_K1>= 0:
+                        avQsi  =  (avQsi*(cntSI_K1)+Qsi_K1)/(cntSI_K1+1)
+                    else:
+                        avQsi  =  Qsi_K1
+                    if cntSI_K2>= 0:
+                        miQsi  = min(Qsi_K2,miQsi)
+                        maQsi  = max(Qsi_K2,maQsi)
+                        laQsi  = Qsi_K2
+                    else:
+                        miQsi  = Qsi_K2
+                        maQsi  = Qsi_K2
+                        laQsi  = Qsi_K2
+                Qo =  miQsi*0.28+laQsi*0.28+avQsi*0.426+maQsi*0.014
+        else:
+            K=args.K
+            if noSegment<=K: # Not enough a interval
+                sI=(prePC._divideInterval(0,noSegment))
+                Qo = localComp._predict(sI,np.array([0]).reshape(-1,1))
+            else:
+                QsiArr = []
+                for cntSeg in range(K-1,noSegment):
+                    cntSI =cntSeg-K+1  #from 0 to  noSegment-K+1
+                    
+                    ## Dividing into intervals
+                    sI=(prePC._divideInterval(cntSI,K))
+                    
+                    ## Local computation
+                    try:
+                        Qsi = localComp._predict(sI,np.array([0]).reshape(-1,1))
+                    except Exception as e:
+                        logging.exception("Error in calculating local localComputation!")
+                    
+                    ## Global computation
+                    QsiArr.append(Qsi)
+                if args.gcMode == 1:
+                    Qo = np.mean(np.array(QsiArr))
+                else:
+                    Qo = med(np.array(QsiArr))
+        print('Qo: %.7f'%Qo)
+    else:
+        logging.exception("Invalid lcMode: %s!"%args.lcMode)
+
+    
+
+
+
+
+
