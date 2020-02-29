@@ -2,7 +2,7 @@
 * This is an open software, called BiQPS, for bitstream-based quality prediction in adaptive streaming.
 BiQPS is inputed by a .csv file containing data of a streaming session. 
 In particular, each line of the file is a record of each segment in the session. 
-Each record consists of five parameters separated by commas, namely stalling durations SD, quantization parameter QP, bitrate BR, resolution RS, and frame-rate FR.
+Each record consists of five parameters separated by commas, namely stalling duration SD, quantization parameter QP, bitrate BR, resolution RS, and frame-rate FR.
 The output Qo is the predicted overall quality of the session.  
 
 ## Installation
