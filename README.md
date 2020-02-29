@@ -27,13 +27,13 @@ BiQPS was tested with 1) Ubuntu 16.04 LTS, python 3.5, pip 19.2.3, and tensorflo
  ## Usage
 	biQPS [-h] [--K K] [--QsiModel {SQM}] [--QoMode {1,2,3}] csvFile
 	positional arguments:
-	  csvFile			Input .csv file
+	  csvFile			input .csv file
 
 	optional arguments:
-	  -h, --help        Show this help text
-	  --K 				Interval length (default: 20); only valid for QoMode=1 and QoMode=2				
-	  --LcMode 			Local computation mode (default:'SQM')
-	  --GcMode			Global computation mode (default:3)
+	  -h, --help                    show this help message and exit
+	  --K 				interval length (default: 20); only valid for QoMode=1 and QoMode=2				
+	  --lcMode 			local computation mode (default:'SQM')
+	  --gcMode			global computation mode (default:3)
 	
 
 ## Example
