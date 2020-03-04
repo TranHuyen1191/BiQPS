@@ -9,12 +9,14 @@ class  preProcessing():
         print('Huyen1')
         self.feaNames       = ['QP','BR','RS','FR','SD']
         self.noFea          = len(self.feaNames)+1 # Add padding status feature for each segment
-        self._MAX_          = {'SD': [20], 'QP': [52],'BR': [15000],'RS': [2799360],'FR': [30],'HE': [1080],'WI': [2592]}
+        self._MAX_          = {'SD': [20], 'QP': [52],'BR': [15000],'RS': [2073600],'FR': [30],'HE': [1080],'WI': [1920]}
         self.I              = [] #I
         self.noSegment 		= 0
     
     def _loadData(self,file): 
         ## Extract data from .csv files
+        self.I              = [] #I
+        self.noSegment      = 0
         try: 
             self.extractFromCSVFile(file)
             #print(self.inputArray)
@@ -29,6 +31,10 @@ class  preProcessing():
             ub   = lb+K
             sI= np.array(self.I)[:,lb:ub].transpose().reshape(1,-1,self.noFea)
         except Exception as e:
+            #print(idxInterval)
+            #print(K)
+            #print(lb)
+            #print(ub)
             logging.exception("Error in dividing input array!")
         return sI
 
