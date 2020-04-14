@@ -1,0 +1,2 @@
+Copyright (c) Huyen T. T. Tran, Duc V. Nguyen, Truong Cong Thang. The University of Aizu
+This software is only used for non-commercial research purposes.
