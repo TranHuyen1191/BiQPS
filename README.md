@@ -55,6 +55,9 @@ The output is saved in output.txt
 If you use this source code in your research, please cite
 
 1. The link to this repository.
+2. The following publications:
+
+Huyen T. T. Tran, Duc V. Nguyen, T. C. Thang, "Open Software for Bitstream-based Quality Prediction in Adaptive Video Streaming", in Proceedings of ACM Multimedia Systems Conference (MMSys’20), June 2020, Istanbul, Turkey.
 
 ## License
 
