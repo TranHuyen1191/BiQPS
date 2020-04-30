@@ -37,8 +37,7 @@ def main():
                 Kmin = min(K1,K2)
                 if noSegment<=Kmin: # Not enough a interval
                     sI=(prePC._divideInterval(0,noSegment))
-                    Qo = localComp._predict(sI,np.array([0]).reshape(-1,1))
-                    f.write("%s\t%f\n"%(args.i[cntSess],Qo[cntSess]))
+                    Qo.append(localComp._predict(sI,np.array([0]).reshape(-1,1)))
                 else:
                     for cntSeg in range(Kmin-1,noSegment):
                         cntSI_K1=cntSeg-K1+1  #from 0 to  noSegment-K+1
@@ -69,7 +68,7 @@ def main():
                             maQsi  = Qsi_K2
                             laQsi  = Qsi_K2
                     Qo.append(float(miQsi*0.28+laQsi*0.28+avQsi*0.426+maQsi*0.014))
-                    f.write("%s\t%f\n"%(args.i[cntSess],Qo[cntSess]))
+                f.write("%s\t%f\n"%(args.i[cntSess],Qo[cntSess]))
         else:
             K=args.K
             for cntSess in range(0,len(args.i)):
@@ -77,7 +76,7 @@ def main():
                 noSegment = prePC._loadData(file=args.i[cntSess])
                 if noSegment<=K: # Not enough a interval
                     sI=(prePC._divideInterval(0,noSegment))
-                    Qo = localComp._predict(sI,np.array([0]).reshape(-1,1))
+                    Qo.append(localComp._predict(sI,np.array([0]).reshape(-1,1)))
                 else:
                     QsiArr = []
                     for cntSeg in range(K-1,noSegment):
