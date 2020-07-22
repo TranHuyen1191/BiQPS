@@ -4,7 +4,7 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name='biQPS',
-    version='0.0.1',
+    version='1.2.0',
     description = ("An Open Software for Bitstream-based Quality Prediction in Adaptive Streaming"),
     packages=['biQPS'],
     package_data={

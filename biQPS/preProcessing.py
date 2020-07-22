@@ -6,7 +6,6 @@ import numpy as np
 class  preProcessing(): 
     ## preProcessing component
     def __init__(self):
-        print('Huyen1')
         self.feaNames       = ['QP','BR','RS','FR','SD']
         self.noFea          = len(self.feaNames)+1 # Add padding status feature for each segment
         self._MAX_          = {'SD': [20], 'QP': [52],'BR': [15000],'RS': [2073600],'FR': [30],'HE': [1080],'WI': [1920]}

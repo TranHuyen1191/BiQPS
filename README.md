@@ -25,25 +25,55 @@ BiQPS was tested with 1) Ubuntu 16.04 LTS, python 3.5, pip 19.2.3, and tensorflo
   - Note: You can uninstall BiQPS software with ```	pip3 uninstall biQPS 	```
  
  ## Usage
-	biQPS [-h] [-i I [I ...]] [--K K] [--lcMode {SQM}] [--gcMode {1,2,3}] [-o O]
-	optional arguments:
-	  -h, --help        show this help message and exit
-	  -i I [I ...]      .csv input files
-	  --K K             interval length (default: 20); only valid for gcMode=1 and gcMode=2
-	  --lcMode {SQM}    local computation mode (default:'SQM')
-	  --gcMode {1,2,3}  global computation mode (default:3)
-	  -o O              .txt output file
+	biQPS [-h] [--K K] [--lcMode {SQM}] [--gcMode {1,2,3}] [-o O] i [i ...]
+    positional arguments:
+        i                 .csv input files or .txt lists of csv. input files
 
-## Example
+    optional arguments:
+        -h, --help        show this help message and exit
+        --K K             interval length (default: 20); only valid for gcMode=1 and gcMode=2
+        --lcMode {SQM}    local computation mode (default:'SQM')
+        --gcMode {1,2,3}  global computation mode (default:3)
+        -o O              .txt output file
+
+
+## Example 1: .csv input file
 
 The predicted ovarall quality value of a session can be obtained by the following command. 
   ```
-	biQPS -i inputData.csv	
+	biQPS  inputData.csv
   ```
 The output is saved in output.txt
   ```
-	inputFiles	predictedValues
-	inputData.csv	1.783356
+    inputFiles  predictedValues
+    inputData.csv   1.783356
+  ```
+
+## Example 2: .txt input file
+
+The predicted ovarall quality values of sessions listed in filelist.txt can be obtained by the following command. 
+  ```
+    biQPS  filelist.txt
+  ```
+The output is saved in output.txt
+  ```
+    inputFiles  predictedValues
+    inputData1.csv  2.893316
+    inputData2.csv  3.397362
+  ```
+
+## Example 3: .txt and .csv input files
+
+The predicted ovarall quality values of sessions can be obtained by the following command. 
+  ```
+    biQPS  inputData.csv filelist.txt
+  ```
+The output is saved in output.txt
+  ```
+    inputFiles  predictedValues
+    inputData.csv   1.783356
+    inputData1.csv  2.893316
+    inputData2.csv  3.397362
   ```
 
 ## Authors

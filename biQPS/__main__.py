@@ -2,6 +2,7 @@ import argparse
 import csv
 import logging
 import math
+from .inputProcessing import inputProcessing
 from .preProcessing import preProcessing
 from .localComputation import calLocalComp
 import numpy as np
@@ -9,16 +10,23 @@ from statistics import median as med
 
 def main():
     parser              = argparse.ArgumentParser()
-    parser.add_argument('-i', type=str, nargs="+",help=".csv input files")
+    parser.add_argument('i',nargs='+',help=".csv input files or .txt lists of csv. input files")
     parser.add_argument('--K', type=int, default='50',help="interval length (default: 20); only valid for gcMode=1 and gcMode=2")
     parser.add_argument('--lcMode', type=str,choices=['SQM'], default='SQM',help="local computation mode (default:'SQM')")
     parser.add_argument('--gcMode', type=int, choices=[1, 2,3], default=3,help="global computation mode (default:3)")
     parser.add_argument('-o', type=str, default='output.txt',help=".txt output file")
     args  = parser.parse_args()
-    prePC = preProcessing()
     
+    inpPC = inputProcessing()
+    prePC = preProcessing()
+
+
     f= open(args.o,"w+")
     f.write("inputFiles\tpredictedValues\n")
+
+    ## InputProcessing 
+    csvFileList = inpPC._extractCSVFile(files=args.i)
+
     ## Computation
     Qo = []
     if args.lcMode == 'SQM':
@@ -27,9 +35,9 @@ def main():
         if args.gcMode == 3:
             K1 = 60
             K2 = 50
-            for cntSess in range(0,len(args.i)):
-                #print('Session: %s'%(args.i[cntSess]))
-                noSegment = prePC._loadData(file=args.i[cntSess])
+            for cntSess in range(0,len(csvFileList)):
+                #print('Session: %s'%(csvFileList[cntSess]))
+                noSegment = prePC._loadData(file=csvFileList[cntSess])
                 miQsi = 100
                 maQsi = 0
                 laQsi = 0
@@ -68,12 +76,12 @@ def main():
                             maQsi  = Qsi_K2
                             laQsi  = Qsi_K2
                     Qo.append(float(miQsi*0.28+laQsi*0.28+avQsi*0.426+maQsi*0.014))
-                f.write("%s\t%f\n"%(args.i[cntSess],Qo[cntSess]))
+                f.write("%s\t%f\n"%(csvFileList[cntSess],Qo[cntSess]))
         else:
             K=args.K
-            for cntSess in range(0,len(args.i)):
-                #print('Session: %s'%(args.i[cntSess]))
-                noSegment = prePC._loadData(file=args.i[cntSess])
+            for cntSess in range(0,len(csvFileList)):
+                #print('Session: %s'%(csvFileList[cntSess]))
+                noSegment = prePC._loadData(file=csvFileList[cntSess])
                 if noSegment<=K: # Not enough a interval
                     sI=(prePC._divideInterval(0,noSegment))
                     Qo.append(localComp._predict(sI,np.array([0]).reshape(-1,1)))
@@ -97,7 +105,7 @@ def main():
                         Qo.append(float(np.mean(np.array(QsiArr))))
                     else:
                         Qo.append(float(med(np.array(QsiArr))))
-                f.write("%s\t%f\n"%(args.i[cntSess],Qo[cntSess]))
+                f.write("%s\t%f\n"%(csvFileList[cntSess],Qo[cntSess]))
         #print('Qo:')
         #print(Qo)
     else:

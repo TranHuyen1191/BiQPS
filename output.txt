@@ -1,2 +1,4 @@
 inputFiles	predictedValues
 inputData.csv	1.783356
+inputData1.csv	2.893316
+inputData2.csv	3.397362
